@@ -1,0 +1,1 @@
+ajustar el modelo factura aumentando el null en el MesaIdMesa

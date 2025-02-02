@@ -1,0 +1,323 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema CocinApp
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema CocinApp
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `CocinApp` DEFAULT CHARACTER SET utf8 ;
+USE `CocinApp` ;
+
+-- -----------------------------------------------------
+-- Table `CocinApp`.`Estado`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CocinApp`.`Estado` (
+  `idEstado` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(70) NULL,
+  PRIMARY KEY (`idEstado`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CocinApp`.`Usuario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CocinApp`.`Usuario` (
+  `idUsuario` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(45) NULL,
+  `correo` VARCHAR(45) NULL,
+  `celular` VARCHAR(45) NULL,
+  `contrasena` VARCHAR(400) NULL,
+  `direccion` VARCHAR(45) NULL,
+  `referencia` VARCHAR(45) NULL,
+  `Estado_idEstado` INT NOT NULL,
+  PRIMARY KEY (`idUsuario`),
+  INDEX `fk_Usuario_Estado1_idx` (`Estado_idEstado` ) ,
+  CONSTRAINT `fk_Usuario_Estado1`
+    FOREIGN KEY (`Estado_idEstado`)
+    REFERENCES `CocinApp`.`Estado` (`idEstado`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CocinApp`.`Cliente`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CocinApp`.`Cliente` (
+  `idCliente` INT NOT NULL AUTO_INCREMENT,
+  `Usuario_idUsuario` INT NOT NULL,
+  PRIMARY KEY (`idCliente`),
+  INDEX `fk_Cliente_Usuario_idx` (`Usuario_idUsuario` ) ,
+  CONSTRAINT `fk_Cliente_Usuario`
+    FOREIGN KEY (`Usuario_idUsuario`)
+    REFERENCES `CocinApp`.`Usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CocinApp`.`Mesero`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CocinApp`.`Mesero` (
+  `idMesero` INT NOT NULL AUTO_INCREMENT,
+  `Usuario_idUsuario` INT NOT NULL,
+  PRIMARY KEY (`idMesero`),
+  INDEX `fk_Mesero_Usuario1_idx` (`Usuario_idUsuario` ) ,
+  CONSTRAINT `fk_Mesero_Usuario1`
+    FOREIGN KEY (`Usuario_idUsuario`)
+    REFERENCES `CocinApp`.`Usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CocinApp`.`Cajero`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CocinApp`.`Cajero` (
+  `idCajero` INT NOT NULL AUTO_INCREMENT,
+  `Usuario_idUsuario` INT NOT NULL,
+  PRIMARY KEY (`idCajero`),
+  INDEX `fk_Cajero_Usuario1_idx` (`Usuario_idUsuario` ) ,
+  CONSTRAINT `fk_Cajero_Usuario1`
+    FOREIGN KEY (`Usuario_idUsuario`)
+    REFERENCES `CocinApp`.`Usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CocinApp`.`Gerente`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CocinApp`.`Gerente` (
+  `idGerente` INT NOT NULL AUTO_INCREMENT,
+  `Usuario_idUsuario` INT NOT NULL,
+  PRIMARY KEY (`idGerente`),
+  INDEX `fk_Gerente_Usuario1_idx` (`Usuario_idUsuario` ) ,
+  CONSTRAINT `fk_Gerente_Usuario1`
+    FOREIGN KEY (`Usuario_idUsuario`)
+    REFERENCES `CocinApp`.`Usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CocinApp`.`Cocinero`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CocinApp`.`Cocinero` (
+  `idCocinero` INT NOT NULL AUTO_INCREMENT,
+  `Usuario_idUsuario` INT NOT NULL,
+  PRIMARY KEY (`idCocinero`),
+  INDEX `fk_Cocinero_Usuario1_idx` (`Usuario_idUsuario` ) ,
+  CONSTRAINT `fk_Cocinero_Usuario1`
+    FOREIGN KEY (`Usuario_idUsuario`)
+    REFERENCES `CocinApp`.`Usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CocinApp`.`Restaurante`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CocinApp`.`Restaurante` (
+  `idRestaurante` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(100) NULL,
+  `descripcion` VARCHAR(300) NULL,
+  `pagado` TINYINT NULL,
+  `Estado_idEstado` INT NOT NULL,
+  PRIMARY KEY (`idRestaurante`),
+  INDEX `fk_Restaurante_Estado1_idx` (`Estado_idEstado` ) ,
+  CONSTRAINT `fk_Restaurante_Estado1`
+    FOREIGN KEY (`Estado_idEstado`)
+    REFERENCES `CocinApp`.`Estado` (`idEstado`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CocinApp`.`Mesa`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CocinApp`.`Mesa` (
+  `idMesa` INT NOT NULL AUTO_INCREMENT,
+  `numero` INT NULL,
+  `ocupada` TINYINT NULL DEFAULT 0,
+  `Estado_idEstado` INT NOT NULL,
+  `Restaurante_idRestaurante` INT NOT NULL,
+  PRIMARY KEY (`idMesa`),
+  INDEX `fk_Mesa_Estado1_idx` (`Estado_idEstado` ) ,
+  INDEX `fk_Mesa_Restaurante1_idx` (`Restaurante_idRestaurante` ) ,
+  CONSTRAINT `fk_Mesa_Estado1`
+    FOREIGN KEY (`Estado_idEstado`)
+    REFERENCES `CocinApp`.`Estado` (`idEstado`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Mesa_Restaurante1`
+    FOREIGN KEY (`Restaurante_idRestaurante`)
+    REFERENCES `CocinApp`.`Restaurante` (`idRestaurante`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CocinApp`.`Factura`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CocinApp`.`Factura` (
+  `idFactura` INT NOT NULL AUTO_INCREMENT,
+  `Usuario_idUsuario` INT NULL,
+  `Mesa_idMesa` INT NULL,
+  `Mesero_idMesero` INT NULL,
+  `Cliente_idCliente` INT NULL,
+  `Fecha` DATE NULL,
+  `IVA` VARCHAR(45) NULL,
+  `pagado` DOUBLE NULL,
+  `precio_envio` DOUBLE NULL,
+  `Restaurante_idRestaurante` INT NOT NULL,
+  PRIMARY KEY (`idFactura`),
+  INDEX `fk_Factura_Usuario1_idx` (`Usuario_idUsuario` ) ,
+  INDEX `fk_Factura_Mesa1_idx` (`Mesa_idMesa` ) ,
+  INDEX `fk_Factura_Mesero1_idx` (`Mesero_idMesero` ) ,
+  INDEX `fk_Factura_Cliente1_idx` (`Cliente_idCliente` ) ,
+  INDEX `fk_Factura_Restaurante1_idx` (`Restaurante_idRestaurante` ) ,
+  CONSTRAINT `fk_Factura_Usuario1`
+    FOREIGN KEY (`Usuario_idUsuario`)
+    REFERENCES `CocinApp`.`Usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Factura_Mesa1`
+    FOREIGN KEY (`Mesa_idMesa`)
+    REFERENCES `CocinApp`.`Mesa` (`idMesa`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Factura_Mesero1`
+    FOREIGN KEY (`Mesero_idMesero`)
+    REFERENCES `CocinApp`.`Mesero` (`idMesero`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Factura_Cliente1`
+    FOREIGN KEY (`Cliente_idCliente`)
+    REFERENCES `CocinApp`.`Cliente` (`idCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Factura_Restaurante1`
+    FOREIGN KEY (`Restaurante_idRestaurante`)
+    REFERENCES `CocinApp`.`Restaurante` (`idRestaurante`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CocinApp`.`Categoria`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CocinApp`.`Categoria` (
+  `idCategoria` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(55) NULL,
+  `descripcion` VARCHAR(300) NULL,
+  `Restaurante_idRestaurante` INT NOT NULL,
+  PRIMARY KEY (`idCategoria`),
+  INDEX `fk_Categoria_Restaurante1_idx` (`Restaurante_idRestaurante` ) ,
+  CONSTRAINT `fk_Categoria_Restaurante1`
+    FOREIGN KEY (`Restaurante_idRestaurante`)
+    REFERENCES `CocinApp`.`Restaurante` (`idRestaurante`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CocinApp`.`Plato`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CocinApp`.`Plato` (
+  `idPlato` INT NOT NULL AUTO_INCREMENT,
+  `Categoria_idCategoria` INT NOT NULL,
+  `nombre` VARCHAR(45) NULL,
+  `descripcion` TEXT NULL,
+  `precio` DOUBLE NULL,
+  `imagen` TEXT NULL,
+  `Estado_idEstado` INT NOT NULL,
+  `Restaurante_idRestaurante` INT NOT NULL,
+  PRIMARY KEY (`idPlato`),
+  INDEX `fk_Plato_Categoria1_idx` (`Categoria_idCategoria` ) ,
+  INDEX `fk_Plato_Estado1_idx` (`Estado_idEstado` ) ,
+  INDEX `fk_Plato_Restaurante1_idx` (`Restaurante_idRestaurante` ) ,
+  CONSTRAINT `fk_Plato_Categoria1`
+    FOREIGN KEY (`Categoria_idCategoria`)
+    REFERENCES `CocinApp`.`Categoria` (`idCategoria`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Plato_Estado1`
+    FOREIGN KEY (`Estado_idEstado`)
+    REFERENCES `CocinApp`.`Estado` (`idEstado`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Plato_Restaurante1`
+    FOREIGN KEY (`Restaurante_idRestaurante`)
+    REFERENCES `CocinApp`.`Restaurante` (`idRestaurante`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CocinApp`.`Pedido`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CocinApp`.`Pedido` (
+  `idPedido` INT NOT NULL AUTO_INCREMENT,
+  `Plato_idPlato` INT NULL,
+  `Factura_idFactura` INT NOT NULL,
+  `observacion` TEXT NULL,
+  `cantidad` INT NULL,
+  `precio` DOUBLE NULL,
+  PRIMARY KEY (`idPedido`),
+  INDEX `fk_Pedido_Plato1_idx` (`Plato_idPlato` ) ,
+  INDEX `fk_Pedido_Factura1_idx` (`Factura_idFactura` ) ,
+  CONSTRAINT `fk_Pedido_Plato1`
+    FOREIGN KEY (`Plato_idPlato`)
+    REFERENCES `CocinApp`.`Plato` (`idPlato`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Pedido_Factura1`
+    FOREIGN KEY (`Factura_idFactura`)
+    REFERENCES `CocinApp`.`Factura` (`idFactura`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `CocinApp`.`Usuario_has_Restaurante`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `CocinApp`.`Usuario_has_Restaurante` (
+  `Usuario_idUsuario` INT NOT NULL,
+  `Restaurante_idRestaurante` INT NOT NULL,
+  PRIMARY KEY (`Usuario_idUsuario`, `Restaurante_idRestaurante`),
+  INDEX `fk_Usuario_has_Restaurante_Restaurante1_idx` (`Restaurante_idRestaurante` ) ,
+  INDEX `fk_Usuario_has_Restaurante_Usuario1_idx` (`Usuario_idUsuario` ) ,
+  CONSTRAINT `fk_Usuario_has_Restaurante_Usuario1`
+    FOREIGN KEY (`Usuario_idUsuario`)
+    REFERENCES `CocinApp`.`Usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Usuario_has_Restaurante_Restaurante1`
+    FOREIGN KEY (`Restaurante_idRestaurante`)
+    REFERENCES `CocinApp`.`Restaurante` (`idRestaurante`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

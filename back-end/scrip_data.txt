@@ -1,0 +1,2 @@
+INSERT INTO `cocinapp`.`estado` (`nombre`) VALUES ('Activada');
+INSERT INTO `cocinapp`.`estado` (`nombre`) VALUES ('Desactivada');
