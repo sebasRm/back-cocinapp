@@ -6,7 +6,7 @@ let sequelize: any;
   dialect: "mysql",
 });*/
 // NUBE
-sequelize = new Sequelize("cocinApp", "root", "MiZZLgOUlYNCsLaLeewavGAvnkMTqiSd", {
+sequelize = new Sequelize("cocinapp", "root", "MiZZLgOUlYNCsLaLeewavGAvnkMTqiSd", {
   host: "mysql.railway.internal",
   dialect: "mysql",
 });
